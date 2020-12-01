@@ -1,12 +1,13 @@
 import { readData } from "../1_1/helpers";
 
 export const solve = (numbers: number[]) => {
+  const numSet = new Set(numbers);
+
   for (const num1 of numbers) {
     for (const num2 of numbers) {
-      for (const num3 of numbers) {
-        if (num1 + num2 + num3 === 2020) {
-          return num1 * num2 * num3;
-        }
+      const num3 = 2020 - (num1 + num2);
+      if (num3 > 0 && numSet.has(num3)) {
+        return num1 * num2 * num3;
       }
     }
   }
