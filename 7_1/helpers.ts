@@ -49,3 +49,7 @@ export const flipLogic = (rules: Rule[]): FlippedRules => {
     return newAcc;
   }, {});
 };
+
+export interface RulesDict {
+  [key: string]: string[];
+}
