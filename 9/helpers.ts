@@ -40,11 +40,10 @@ interface Combination {
 const count = (numbers: number[]): number =>
   numbers.reduce((acc, cur) => acc + cur, 0);
 
-export const findAllContiguousCombinations = (
-  numbers: number[]
-): Combination[] => {
-  const combinations: Combination[] = [];
-
+export const findContiguousCombinations = (
+  numbers: number[],
+  targetSum: number
+): Combination => {
   for (
     let sizeOfCombination = 2;
     sizeOfCombination < numbers.length;
@@ -56,12 +55,14 @@ export const findAllContiguousCombinations = (
         i,
         i + sizeOfCombination
       );
-      combinations.push({
-        numbers: numbersInCurrentCombination,
-        sum: count(numbersInCurrentCombination),
-      });
+      const sum = count(numbersInCurrentCombination);
+
+      if (sum === targetSum) {
+        return {
+          numbers: numbersInCurrentCombination,
+          sum,
+        };
+      }
     }
   }
-
-  return combinations;
 };

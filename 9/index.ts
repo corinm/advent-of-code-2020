@@ -1,14 +1,14 @@
 import {
   readData,
   findFirstInvalidNumber,
-  findAllContiguousCombinations,
+  findContiguousCombinations,
 } from "./helpers";
 
 const solvePart2 = (data: number[], firstInvalidNumber: number): number => {
   const numbersToSearch = data.slice(0, data.indexOf(firstInvalidNumber));
-  const combinations = findAllContiguousCombinations(numbersToSearch);
-  const [targetCombination] = combinations.filter(
-    (c) => c.sum === firstInvalidNumber
+  const targetCombination = findContiguousCombinations(
+    numbersToSearch,
+    firstInvalidNumber
   );
 
   const max = Math.max(...targetCombination.numbers);
