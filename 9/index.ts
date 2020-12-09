@@ -1,28 +1,28 @@
-import { readData } from "./helpers";
+import {
+  readData,
+  findFirstInvalidNumber,
+  findAllContiguousCombinations,
+} from "./helpers";
 
-const preamble = 25;
+const solvePart2 = (data: number[], firstInvalidNumber: number): number => {
+  const numbersToSearch = data.slice(0, data.indexOf(firstInvalidNumber));
+  const combinations = findAllContiguousCombinations(numbersToSearch);
+  const [targetCombination] = combinations.filter(
+    (c) => c.sum === firstInvalidNumber
+  );
 
-const isValid = (numbers: number[], numberToCheck: number): boolean => {
-  const allPossibleSums = numbers
-    .map((num1) => numbers.map((num2) => num1 + num2))
-    .reduce((acc, cur) => [...acc, ...cur], []);
-  return allPossibleSums.includes(numberToCheck);
-};
+  const max = Math.max(...targetCombination.numbers);
+  const min = Math.min(...targetCombination.numbers);
 
-const findFirstInvalidNumber = (numbers: number[]): number | undefined => {
-  for (let i = preamble; i < numbers.length; i++) {
-    const previous25Numbers = numbers.slice(i - preamble, i);
-    if (!isValid(previous25Numbers, numbers[i])) {
-      return numbers[i];
-    }
-  }
-
-  return undefined;
+  return min + max;
 };
 
 const main = async () => {
   const data = await readData();
-  console.log(findFirstInvalidNumber(data));
+
+  const firstInvalidNumber = findFirstInvalidNumber(data);
+  console.log("Part 1:", firstInvalidNumber);
+  console.log("Part 2:", solvePart2(data, firstInvalidNumber));
 };
 
 main();
