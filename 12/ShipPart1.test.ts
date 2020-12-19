@@ -1,5 +1,5 @@
-import { solvePart1, parseLine } from "./helpers";
-import Ship from "./Ship";
+import { parseLine } from "./helpers";
+import Ship from "./ShipPart1";
 
 describe("navigation", () => {
   test.each([

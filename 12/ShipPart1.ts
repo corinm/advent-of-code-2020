@@ -5,7 +5,7 @@ export interface Instruction {
   action: Action;
   value: number;
 }
-interface Point {
+export interface Point {
   x: number;
   y: number;
 }

@@ -1,6 +1,7 @@
 import * as fs from "fs";
 
-import Ship, { Action, Instruction } from "./Ship";
+import ShipPart1, { Action, Instruction } from "./ShipPart1";
+import ShipPart2 from "./ShipPart2";
 
 export const readData = async (): Promise<Instruction[]> => {
   try {
@@ -19,7 +20,17 @@ export const parseLine = (line: string): Instruction => ({
 });
 
 export const solvePart1 = (instructions: Instruction[]): number => {
-  const ferry = new Ship();
+  const ferry = new ShipPart1();
+  ferry.navigate(instructions);
+
+  const { x, y } = ferry.getPosition();
+  const manhattanDistance = Math.abs(x) + Math.abs(y);
+
+  return manhattanDistance;
+};
+
+export const solvePart2 = (instructions: Instruction[]): number => {
+  const ferry = new ShipPart2();
   ferry.navigate(instructions);
 
   const { x, y } = ferry.getPosition();
