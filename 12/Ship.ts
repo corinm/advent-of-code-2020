@@ -26,7 +26,6 @@ export default class Ship {
       } else if (instruction.action === "F") {
         this.moveForward(instruction.value);
       }
-      console.log({ x: this.x, y: this.y });
     });
   };
 
@@ -53,69 +52,31 @@ export default class Ship {
   };
 
   addDegrees = (amount: number): void => {
-    if (this.direction + amount >= 360) {
-      this.direction = this.direction + amount - 360;
-    } else {
-      this.direction = this.direction + amount;
-    }
+    const newDirection = this.direction + amount;
+    this.direction = newDirection % 360;
   };
 
   subtractDegrees = (amount: number): void => {
-    if (this.direction - amount < 0) {
-      this.direction = this.direction + amount + 360;
-    } else {
-      this.direction = this.direction + amount;
-    }
+    const newDirection = this.direction - amount;
+    this.direction =
+      newDirection < 0 ? Math.abs(newDirection + 360) : newDirection;
   };
 
   moveForward = (distance: number): void => {
-    const d = this.direction;
     let dX = 0;
     let dY = 0;
 
-    if (d === 0) {
+    if (this.direction === 0) {
       dY = -distance;
-    } else if (d === 180) {
+    } else if (this.direction === 180) {
       dY = distance;
-    } else if (d === 90) {
+    } else if (this.direction === 90) {
       dX = distance;
-    } else if (d === 270) {
+    } else if (this.direction === 270) {
       dX = -distance;
     }
-
-    const h = distance;
-    if (d > 0 && d <= 45) {
-      dX = Math.sin(d) * h;
-      dY = -Math.cos(d) * h;
-    } else if (d > 45 && d < 90) {
-      dX = Math.cos(d) * h;
-      dY = -Math.sin(d) * h;
-    } else if (d > 90 && d <= 135) {
-      dX = Math.cos(d) * h;
-      dY = Math.sin(d) * h;
-    } else if (d > 135 && d < 180) {
-      dX = Math.sin(d) * h;
-      dY = Math.cos(d) * h;
-    } else if (d > 180 && d <= 225) {
-      dX = -Math.sin(d) * h;
-      dY = Math.cos(d) * h;
-    } else if (d > 225 && d < 270) {
-      dX = -Math.cos(d) * h;
-      dY = Math.sin(d) * h;
-    } else if (d > 270 && d <= 315) {
-      dX = -Math.cos(d) * h;
-      dY = -Math.sin(d) * h;
-    } else if (d > 315 && d < 360) {
-      dX = -Math.sin(d) * h;
-      dY = -Math.cos(d) * h;
-    }
-
-    console.log({ dX, dY });
 
     this.x += dX;
     this.y += dY;
   };
 }
-
-const xIsOpposite = (degrees: number) =>
-  degrees <= 45 || (degrees > 135 && degrees <= 225) || degrees > 315;
