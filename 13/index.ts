@@ -10,6 +10,7 @@ const main = async () => {
   console.log("Part 1:", solvePart1(data1));
 
   const data2 = await readDataPart2();
+  console.log(data2);
   console.log("Part 2:", solvePart2(data2, 100000000000000));
 };
 

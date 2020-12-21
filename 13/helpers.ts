@@ -23,16 +23,42 @@ export const readDataPart1 = async (): Promise<BusData> => {
   }
 };
 
-export const readDataPart2 = async (): Promise<number[]> => {
+interface BusAndOffset {
+  busId: number;
+  offset: number;
+}
+
+export const readDataPart2 = async (): Promise<BusAndOffset[]> => {
   try {
     const data = await fs.promises.readFile(`${__dirname}/data.txt`, {
       encoding: "utf-8",
     });
     const lines = data.split("\n");
-    return lines[1].split(",").map((id) => (id === "x" ? null : parseInt(id)));
+    const buses = lines[1]
+      .split(",")
+      .map((id) => (id === "x" ? null : parseInt(id)));
+
+    return parseBuses(buses);
   } catch (e) {
     console.error(e);
   }
+};
+
+export const parseBuses = (buses: number[]): BusAndOffset[] => {
+  const busesWithOffsets: BusAndOffset[] = [];
+
+  let offset = 0;
+  let offsetOffset = 0;
+  buses.forEach((bus) => {
+    if (bus) {
+      busesWithOffsets.push({ busId: bus, offset: offset + offsetOffset });
+      offsetOffset++;
+    } else {
+      offset++;
+    }
+  });
+
+  return busesWithOffsets;
 };
 
 export const solvePart1 = (data: BusData): number => {
@@ -53,38 +79,28 @@ export const solvePart1 = (data: BusData): number => {
     }
   }
 
-  console.log({ startingTime, busId, targetTime });
-
   const timeToWait = targetTime - startingTime;
 
   return busId * timeToWait;
 };
 
 export const solvePart2 = (
-  buses: number[],
+  buses: BusAndOffset[],
   minimumTimestamp?: number
 ): number => {
   let iteration = minimumTimestamp
-    ? Math.floor(minimumTimestamp / buses[0])
+    ? Math.floor(minimumTimestamp / buses[0].busId)
     : 1;
-  let found = false;
 
-  while (!found) {
-    const startingTimestamp = buses[0] * iteration;
-    // console.log({ iteration, startingTimestamp });
+  let solved = false;
 
-    const isAMatch =
+  while (!solved) {
+    solved =
       buses
-        .map((bus, i) =>
-          bus === null ? true : (startingTimestamp + i) % bus === 0
-        )
-        .filter((leavesAtThisTime) => !leavesAtThisTime).length === 0;
-
-    if (isAMatch) {
-      found = true;
-      return startingTimestamp;
-    } else {
-      iteration++;
-    }
+        .map(({ busId, offset }) => (busId * iteration + offset) % busId === 0)
+        .filter((x) => x === false).length === 0;
+    iteration++;
   }
+
+  return iteration;
 };
