@@ -49,3 +49,25 @@ export const calculateMaskedValue = (mask: string, value: number): number => {
     .join("");
   return parseInt(maskedValue, 2);
 };
+
+export const solvePart1 = (commands: Command[]) => {
+  const memory = [];
+  let currentMask;
+
+  commands.forEach((command) => {
+    if (command.type === "mask") {
+      currentMask = command.mask;
+    } else if (command.type === "write") {
+      memory[command.position] = calculateMaskedValue(
+        currentMask,
+        command.value
+      );
+    }
+  });
+
+  const answer = memory
+    .filter((v) => v)
+    .reduce((acc: number, cur: number) => acc + cur, 0);
+
+  return answer;
+};
