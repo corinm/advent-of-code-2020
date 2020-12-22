@@ -3,18 +3,20 @@ interface PreviousTurns {
   prev: number;
 }
 
+type TimesSpoken = { [key: string]: boolean };
+
 export const getNextNumberSpoken = (
   turnNumber: number,
   startingNumbers: number[],
   lastNumberSpoken: number,
-  timesSpoken: { [key: string]: number },
+  timesSpoken: TimesSpoken,
   turnNumbersLastSpoken: { [key: string]: PreviousTurns }
 ): number => {
   if (turnNumber <= startingNumbers.length) {
     return startingNumbers[turnNumber - 1];
   }
 
-  if (timesSpoken[lastNumberSpoken] === 1) {
+  if (timesSpoken[lastNumberSpoken]) {
     return 0;
   } else {
     return (
@@ -31,7 +33,7 @@ export const solvePart1 = (
   let turnNumber = 1;
   let numberSpoken = null;
   let lastNumberSpoken = null;
-  const timesSpoken = {};
+  const timesSpoken: TimesSpoken = {};
   const turnNumbersLastSpoken: { [key: string]: PreviousTurns } = {};
 
   while (turnNumber <= nthTurn) {
@@ -44,9 +46,12 @@ export const solvePart1 = (
     );
 
     lastNumberSpoken = numberSpoken;
-    timesSpoken[numberSpoken] = timesSpoken[numberSpoken]
-      ? timesSpoken[numberSpoken] + 1
-      : 1;
+
+    if (timesSpoken[numberSpoken] === undefined) {
+      timesSpoken[numberSpoken] = true;
+    } else if (timesSpoken[numberSpoken] === true) {
+      timesSpoken[numberSpoken] = false;
+    }
 
     if (!turnNumbersLastSpoken[numberSpoken]) {
       turnNumbersLastSpoken[numberSpoken] = { prev: null, last: turnNumber };
@@ -61,3 +66,5 @@ export const solvePart1 = (
 
   return numberSpoken;
 };
+
+export const solvePart2 = solvePart1;
