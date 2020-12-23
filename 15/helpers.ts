@@ -1,28 +1,17 @@
-interface PreviousTurns {
-  last: number;
-  prev: number;
-}
-
-type TimesSpoken = { [key: string]: boolean };
-
 export const getNextNumberSpoken = (
   turnNumber: number,
   startingNumbers: number[],
-  lastNumberSpoken: number,
-  timesSpoken: TimesSpoken,
-  turnNumbersLastSpoken: { [key: string]: PreviousTurns }
+  lastNumberSpokenOnce: boolean,
+  differenceInTurnsOfLastNumber: number
 ): number => {
   if (turnNumber <= startingNumbers.length) {
     return startingNumbers[turnNumber - 1];
   }
 
-  if (timesSpoken[lastNumberSpoken]) {
+  if (lastNumberSpokenOnce) {
     return 0;
   } else {
-    return (
-      turnNumbersLastSpoken[lastNumberSpoken].last -
-      turnNumbersLastSpoken[lastNumberSpoken].prev
-    );
+    return differenceInTurnsOfLastNumber;
   }
 };
 
@@ -33,33 +22,33 @@ export const solvePart1 = (
   let turnNumber = 1;
   let numberSpoken = null;
   let lastNumberSpoken = null;
-  const timesSpoken: TimesSpoken = {};
-  const turnNumbersLastSpoken: { [key: string]: PreviousTurns } = {};
+  const timesSpoken = new Map();
+  const turnLastSpoken = new Map();
+  const turnPreviousSpoken = new Map();
 
   while (turnNumber <= nthTurn) {
+    const lastNumberSpokenOnce = timesSpoken.get(lastNumberSpoken);
+    const differenceInTurnsOfLastNumber =
+      turnLastSpoken.get(lastNumberSpoken) -
+      turnPreviousSpoken.get(lastNumberSpoken);
+
     numberSpoken = getNextNumberSpoken(
       turnNumber,
       startingNumbers,
-      lastNumberSpoken,
-      timesSpoken,
-      turnNumbersLastSpoken
+      lastNumberSpokenOnce,
+      differenceInTurnsOfLastNumber
     );
 
     lastNumberSpoken = numberSpoken;
 
-    if (timesSpoken[numberSpoken] === undefined) {
-      timesSpoken[numberSpoken] = true;
-    } else if (timesSpoken[numberSpoken] === true) {
-      timesSpoken[numberSpoken] = false;
+    if (timesSpoken.get(numberSpoken) === undefined) {
+      timesSpoken.set(numberSpoken, true);
+    } else if (timesSpoken.get(numberSpoken) === true) {
+      timesSpoken.set(numberSpoken, false);
     }
 
-    if (!turnNumbersLastSpoken[numberSpoken]) {
-      turnNumbersLastSpoken[numberSpoken] = { prev: null, last: turnNumber };
-    }
-
-    turnNumbersLastSpoken[numberSpoken].prev =
-      turnNumbersLastSpoken[numberSpoken].last;
-    turnNumbersLastSpoken[numberSpoken].last = turnNumber;
+    turnPreviousSpoken.set(numberSpoken, turnLastSpoken.get(lastNumberSpoken));
+    turnLastSpoken.set(numberSpoken, turnNumber);
 
     turnNumber++;
   }

@@ -2,33 +2,31 @@ import { getNextNumberSpoken, solvePart1, solvePart2 } from "./helpers";
 
 describe("getNextNumberSpoken", () => {
   test.each([
-    [1, [0, 3, 6], null, {}, {}, 0],
-    [2, [0, 3, 6], null, {}, {}, 3],
-    [3, [0, 3, 6], null, {}, {}, 6],
-    [4, [0, 3, 6], 6, { 0: true, 3: true, 6: true }, {}, 0],
-    [5, [0, 3, 6], 0, { 3: true, 6: true }, { 0: { last: 4, prev: 1 } }, 3],
-    [6, [0, 3, 6], 3, { 3: false, 6: true }, { 3: { last: 5, prev: 2 } }, 3],
-    [7, [0, 3, 6], 3, { 3: false, 6: true }, { 3: { last: 6, prev: 5 } }, 1],
-    [8, [0, 3, 6], 1, { 1: true, 6: true }, {}, 0],
-    [9, [0, 3, 6], 0, { 1: true, 6: true }, { 0: { last: 8, prev: 4 } }, 4],
-    [10, [0, 3, 6], 4, { 1: true, 4: true, 6: true }, {}, 0],
+    [1, [0, 3, 6], false, undefined, 0],
+    [2, [0, 3, 6], false, undefined, 3],
+    [3, [0, 3, 6], false, undefined, 6],
+    [4, [0, 3, 6], true, undefined, 0],
+    [5, [0, 3, 6], false, 4 - 1, 3],
+    [6, [0, 3, 6], false, 5 - 2, 3],
+    [7, [0, 3, 6], false, 6 - 5, 1],
+    [8, [0, 3, 6], true, undefined, 0],
+    [9, [0, 3, 6], false, 8 - 4, 4],
+    [10, [0, 3, 6], true, undefined, 0],
   ])(
     "example 1 - turn %p",
     (
       turnNumber,
       startingNumbers,
-      lastNumberSpoken,
-      timesSpoken,
-      turnNumbersLastSpoken,
+      lastNumberSpokenOnce,
+      differenceInTurnsOfLastNumber,
       numberSpoken
     ) => {
       expect(
         getNextNumberSpoken(
           turnNumber,
           startingNumbers,
-          lastNumberSpoken,
-          timesSpoken,
-          turnNumbersLastSpoken
+          lastNumberSpokenOnce,
+          differenceInTurnsOfLastNumber
         )
       ).toEqual(numberSpoken);
     }
@@ -53,7 +51,7 @@ describe("solvePart1", () => {
 });
 
 describe("solvePart2", () => {
-  xtest.each([[[0, 3, 6], 30000000, 175594]])(
+  test.each([[[0, 3, 6], 30000000, 175594]])(
     "example 1 - %p turn %p",
     (startingNumbers, nthTurn, numberSpoken) => {
       expect(solvePart2(startingNumbers, nthTurn)).toEqual(numberSpoken);
