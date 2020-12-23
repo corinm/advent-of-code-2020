@@ -7,3 +7,5 @@ export interface Rule {
 }
 
 export type Ticket = number[];
+
+export type Positions = { [key: string]: number };
