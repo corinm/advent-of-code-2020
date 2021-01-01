@@ -118,7 +118,7 @@ describe("cycle", () => {
   });
 });
 
-describe("solvePart1", () => {
+describe("solvePart2", () => {
   test("example", () => {
     const initialState = ".#.\n..#\n###";
     const grid = generate3dGrid(initialState);
