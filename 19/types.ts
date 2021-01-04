@@ -14,5 +14,5 @@ interface SubRuleOrRule {
   rules2: number[];
 }
 
-type Rule = SingleCharacterRule | SubRuleRule | SubRuleOrRule;
-type Rules = { [key: number]: Rule };
+export type Rule = SingleCharacterRule | SubRuleRule | SubRuleOrRule;
+export type Rules = { [key: number]: Rule };
